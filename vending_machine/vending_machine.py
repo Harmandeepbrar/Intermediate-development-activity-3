@@ -1,8 +1,11 @@
 """Defines the VendingMachine class."""
 
-from vending_machine.vending_machine_state import VendingMachineState
+from vending_machine.state import State
+from vending_machine.no_payment_state import NoPaymentState
+from vending_machine.out_of_stock_state import OutOfStockState
 
-__author__ = "COMP-2327 Faculty"
+
+__author__ = "Harmandeep Brar"
 __version__ = "1.0.0"
 
 class VendingMachine:
@@ -12,7 +15,7 @@ class VendingMachine:
         """Initializes a new instance of the VendingMachine class."""
 
         self.__product_count: int = product_count
-        self.state = VendingMachineState.NO_PAYMENT
+        self.state = NoPaymentState()
 
     @property
     def state(self) -> VendingMachineState:
@@ -29,52 +32,27 @@ class VendingMachine:
     def receive_payment(self) -> None:
         """Accepts pay payment from the customer."""
 
-        match(self.state):
-            case VendingMachineState.NO_PAYMENT:
-                self.output_to_display("PAYMENT ADDED")
-
-                self.state = VendingMachineState.HAS_PAYMENT
-
-            case VendingMachineState.HAS_PAYMENT:
-                self.output_to_display("PAYMENT ALREADY ADDED")
-
-            case VendingMachineState.OUT_OF_STOCK:
-                self.output_to_display("OUT OF STOCK")
+        self.state.receive_payment(self)
 
     def select_item(self) -> None:
         """Customer selects the product to dispense."""
 
-        match(self.state):
-            case VendingMachineState.NO_PAYMENT:
-                self.output_to_display("INSUFFICIENT FUNDS - PLEASE ADD PAYMENT")
-
-            case VendingMachineState.HAS_PAYMENT:
-                self.output_to_display("DISPENSING...", False)
-                self.dispense_product()
-
-                self.__state = VendingMachineState.OUT_OF_STOCK \
-                    if self.__product_count <= 0 else \
-                    VendingMachineState.NO_PAYMENT
-
-            case VendingMachineState.OUT_OF_STOCK:
-                self.output_to_display("")
-
-            case _:
-                self.output_to_display("ERROR OCCURRED")
+        self.state.select_item(self)
 
     def dispense_product(self) -> None:
         """Dispenses the product to the customer."""
 
         if self.__product_count == 0:
             self.output_to_display("ERROR: OUT OF STOCK")
-            self.state = VendingMachineState.OUT_OF_STOCK
+            self.state.select_item(self)
         else:
             self.__product_count -= 1
             self.output_to_display("ENJOY YOUR ITEM")
 
-            self.state = VendingMachineState.OUT_OF_STOCK \
-                    if self.__product_count <= 0 else \
-                    VendingMachineState.NO_PAYMENT
+            self.state = NoPaymentState()
+
+            if self.__product_count <= 0:
+                self.state = OutOfStockState()
 
     def output_to_display(self, message: str,
                           include_line_break: bool=True) -> None:
