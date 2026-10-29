@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from vending_machine.state import State
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:

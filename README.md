@@ -10,4 +10,4 @@ This activity will help to reinforce learning of the Module 3 concepts of:
 
 ## Additional Information
 
-[ Use this space to include additional information that may help in your learning. ]
+I practiced putting different machine states into separate files and fixed import errors.

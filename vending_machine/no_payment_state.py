@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from vending_machine.state import State
+from vending_machine.has_payment_state import HasPaymentState
 
 if TYPE_CHECKING:
     from vending_machine.vending_machine import VendingMachine
@@ -23,6 +24,7 @@ class NoPaymentState(State):
         """
 
         machine.output_to_display("PAYMENT ADDED")
+        machine.state = HasPaymentState()
 
     def select_item(self, machine: VendingMachine) -> None:
         """ Payment need to be added when item is selected.

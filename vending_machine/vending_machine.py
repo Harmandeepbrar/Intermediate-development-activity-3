@@ -18,13 +18,13 @@ class VendingMachine:
         self.state = NoPaymentState()
 
     @property
-    def state(self) -> VendingMachineState:
+    def state(self) -> State:
         """Returns the current state of the vending machine."""
 
         return self.__state
 
     @state.setter
-    def state(self, state: VendingMachineState) -> None:
+    def state(self, state: State) -> None:
         """Sets the state of the vending machine."""
 
         self.__state = state
